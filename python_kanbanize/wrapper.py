@@ -37,10 +37,6 @@ class Kanbanize(Session):
 
         :param boardid: Board number to retrieve tasks from
         :type boardid: int
-        :param format: Return format
-        :type format: None, 'xml', 'json, 'csv'
-        :rtype: dict or str (for explicit format request)
-        :raises: TypeError if given format is != from the ones above
 
         Example::
 
@@ -49,7 +45,25 @@ class Kanbanize(Session):
 
             >>> k = Kanbanize(apikey)
             >>> k.get_all_tasks(5)
-            [{u'columnname': u'backlog', u'blockedreason': None, u'lanename': u'Default Swimlane', u'subtaskdetails': [], u'subtasks': None, u'title': u'Task title', u'color': u'#F0F0F0', u'tags': u'', u'priority': u'Average', u'assignee': u'None', u'deadline': None, u'taskid': u'38', u'subtaskscomplete': None, u'extlink': u'', u'blocked': None, u'type': u'0', u'leadtime': 1, u'size': u'2'}, {u'columnname': u'Backlog', u'blockedreason': None, u'lanename': u'Default Swimlane', u'subtaskdetails': [], u'subtasks': u'0', u'title': u'Kanbanize test task 01', u'color': u'#99b399', u'tags': None, u'priority': u'Average', u'assignee': u'None', u'deadline': None, u'taskid': u'27', u'subtaskscomplete': u'0', u'extlink': None, u'blocked': u'0', u'type': u'0', u'leadtime': 15, u'size': u'2'}, {u'columnname': u'Backlog', u'blockedreason': None, u'lanename': u'Default Swimlane', u'subtaskdetails': [], u'subtasks': u'0', u'title': u'Kanbanize test task 02', u'color': u'#99b399', u'tags': None, u'priority': u'Average', u'assignee': u'None', u'deadline': None, u'taskid': u'28', u'subtaskscomplete': u'0', u'extlink': None, u'blocked': u'0', u'type': u'0', u'leadtime': 15, u'size': u'2'}]
+            [{u'columnname': u'backlogr, u'blockedreason': None, u'lanename':
+            u'Default Swimlane', u'subtaskdetails': [], u'subtasks': None,
+            u'title': u'Task title', u'color': u'#F0F0F0', u'tags': u'',
+            u'priority': u'Average', u'assignee': u'None', u'deadline': None,
+            u'taskid': u'38', u'subtaskscomplete': None, u'extlink': u'',
+            u'blocked': None, u'type': u'0', u'leadtime': 1, u'size': u'2'},
+            {u'columnname': u'Backlog', u'blockedreason': None, u'lanename':
+            u'Default Swimlane', u'subtaskdetails': [], u'subtasks': u'0',
+            u'title': u'Kanbanize test task 01', u'color': u'#99b399', u'tags':
+            None, u'priority': u'Average', u'assignee': u'None', u'deadline':
+            None, u'taskid': u'27', u'subtaskscomplete': u'0', u'extlink':
+            None, u'blocked': u'0', u'type': u'0', u'leadtime': 15, u'size':
+            u'2'}, {u'columnname': u'Backlog', u'blockedreason': None,
+            u'lanename': u'Default Swimlane', u'subtaskdetails': [],
+            u'subtasks': u'0', u'title': u'Kanbanize test task 02', u'color':
+            u'#99b399', u'tags': None, u'priority': u'Average', u'assignee':
+            u'None', u'deadline': None, u'taskid': u'28', u'subtaskscomplete':
+            u'0', u'extlink': None, u'blocked': u'0', u'type': u'0',
+            u'leadtime': 15, u'size': u'2'}]
 
         """
         response = self.post('/get_all_tasks/boardid/%s' % boardid)
