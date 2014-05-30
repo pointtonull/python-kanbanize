@@ -78,17 +78,12 @@ class Kanbanize(Session):
         :type boardid: int
         :param taskid: Id of the task to retrieve details from
         :type taskid: int
-        :param format: Return format
-        :type format: None, 'xml', 'json, 'csv'
-        :rtype: dict or str (for explicit format request)
-        :raises: TypeError if given format is != from the ones above
 
         """
-        r = self.post('/get_task_details/boardid/%s/taskid/%s' % (boardid, taskid), format=format)
-        if format == 'dict':
-            return r.json
-        else:
-            return r.content
+        response = self.post('/get_task_details/boardid/%s/taskid/%s' %
+            (boardid, taskid))
+        return response.json()
+
 
     def create_new_task(self, boardid, details):
         """
