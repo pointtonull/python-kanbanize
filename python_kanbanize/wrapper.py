@@ -14,23 +14,13 @@ class Kanbanize(Session):
         self.apikey = apikey
         super(Kanbanize, self).__init__(**kwargs)
 
+
     def request(self, method, url=None, data=None, headers=None, **kwargs):
         URI = 'http://kanbanize.com/index.php/api/kanbanize'
-        url = '%s%s' % (URI, url)
+        url = '%s%s/format/json' % (URI, url)
         headers = { 'apikey': self.apikey, 'content-type': 'application/json' }
-        format =  kwargs['format']
-        del kwargs['format']
-        if format in ['xml', 'json', 'csv']:
-            f = format
-            url = "%s/format/%s" % (url, f)
-        elif format == 'dict':
-            f = 'json'
-            url = "%s/format/%s" % (url, f)
-        elif format == 'raw':
-            pass
-        else:
-            raise TypeError
-        logging.debug('Kanbanize.request:%s - %s - %s' % (url, data, format))
+
+        logging.debug('Kanbanize.request:%s - %s - %s' % (url, data, "json"))
 
         return super(Kanbanize, self).request(
             method,
@@ -40,7 +30,8 @@ class Kanbanize(Session):
             **kwargs
         )
 
-    def get_all_tasks(self, boardid, format='dict'):
+
+    def get_all_tasks(self, boardid):
         """
         Retireves a list of all tasks on 'boardid' board
 
@@ -61,13 +52,11 @@ class Kanbanize(Session):
             [{u'columnname': u'backlog', u'blockedreason': None, u'lanename': u'Default Swimlane', u'subtaskdetails': [], u'subtasks': None, u'title': u'Task title', u'color': u'#F0F0F0', u'tags': u'', u'priority': u'Average', u'assignee': u'None', u'deadline': None, u'taskid': u'38', u'subtaskscomplete': None, u'extlink': u'', u'blocked': None, u'type': u'0', u'leadtime': 1, u'size': u'2'}, {u'columnname': u'Backlog', u'blockedreason': None, u'lanename': u'Default Swimlane', u'subtaskdetails': [], u'subtasks': u'0', u'title': u'Kanbanize test task 01', u'color': u'#99b399', u'tags': None, u'priority': u'Average', u'assignee': u'None', u'deadline': None, u'taskid': u'27', u'subtaskscomplete': u'0', u'extlink': None, u'blocked': u'0', u'type': u'0', u'leadtime': 15, u'size': u'2'}, {u'columnname': u'Backlog', u'blockedreason': None, u'lanename': u'Default Swimlane', u'subtaskdetails': [], u'subtasks': u'0', u'title': u'Kanbanize test task 02', u'color': u'#99b399', u'tags': None, u'priority': u'Average', u'assignee': u'None', u'deadline': None, u'taskid': u'28', u'subtaskscomplete': u'0', u'extlink': None, u'blocked': u'0', u'type': u'0', u'leadtime': 15, u'size': u'2'}]
 
         """
-        r = self.post('/get_all_tasks/boardid/%s' % boardid, format=format)
-        if format == 'dict':
-            return r.json
-        else:
-            return r.content
+        response = self.post('/get_all_tasks/boardid/%s' % boardid)
+        return response.json()
 
-    def get_task_details(self, boardid, taskid, format='dict'):
+
+    def get_task_details(self, boardid, taskid):
         """
         Retireves 'taskid' task details from 'boardid' board
 
