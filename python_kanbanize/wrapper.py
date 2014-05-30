@@ -85,7 +85,7 @@ class Kanbanize(Session):
         return response.json()
 
 
-    def create_new_task(self, boardid, details):
+    def create_new_task(self, boardid, **kwargs):
         """
         Creates a new task in 'boardid' board with optional 'details'
 
@@ -105,23 +105,23 @@ class Kanbanize(Session):
             type	The name of the type you want to set.
             template	The name of the template you want to set.
         :rtype: xml
-
         """
 
         kwargs['boardid'] = boardid
         params = json.dumps(kwargs)
         logging.debug('create_new_task:%s' % params)
-        r = self.post('/create_new_task/', data=params, format = 'raw')
-        return r.content
+        response = self.post('/create_new_task/', data=params)
+        return response.json()
 
-    def edit_task(self, boardid, details):
+
+    def delete_task(self, boardid, taskid):
         """
-        Edit a task in 'boardid' board with provided 'details'
+        Deletes the task identified withe 'boardid' and 'taskid'.
 
         :param boardid: Board number to retrieve tasks from
         :type boardid: int
-        :param details: Task details
-        :type details: dict (http://kanbanize.com/ctrl_integration for details)
+        :param taskid: Task number to delete
+        :type boardid: int
         :rtype: xml
         """
 
@@ -136,12 +136,66 @@ class Kanbanize(Session):
 
     def edit_task(self, boardid, taskid, **kwargs):
         """
-        details['boardid'] = boardid
-        params = json.dumps(details)
+        Edit a task in 'boardid' board with provided 'details'
+
+        :param boardid: Board number to retrieve tasks from
+        :type boardid: int
+        :param kwargs: New task details
+        :type kwargs: recognized params are:
+            title	New title of the task
+            description	New description of the task
+            priority	New priority, can be: "Low", "Average" or "High"
+            assignee	New assigned username (must be a valid username)
+            color	Code of the new color (e.g. "34a97b")
+            size	New size of the task
+            tags	Space separated list of tags (e.g. "demo security")
+            deadline	New dedline in format: yyyy-mm-dd (e.g. "2011-12-13")
+            extlink	A new link.
+            type	New name of the type.
+
+            If one parameter is not especified will left unchanged.
+        :rtype: json
+        """
+
+        kwargs['boardid'] = boardid
+        kwargs['taskid'] = taskid
+        params = json.dumps(kwargs)
         logging.debug('edit_task:%s' % params)
-        r = self.post('/edit_task/', data=params, format = 'raw')
-        return r.content
+        response = self.post('/edit_task/', data=params)
+        return response.json()
+
+
+    def move_task(self, boardid, taskid, column, **kwargs):
+        """
+        With this action you can move tasks on the board by specifying the
+        column name and optionally the swim-lane name.
+
+        :param boardid: Board number to retrieve tasks from
+        :type boardid: int
+        :param taskdid: task number
+        :type taskid: int
+        :param column: column name
+        :type taskid: string
+        :param details: Another options
+        :type details: dict with this optional parameters:
+            lane	The name of the swim-lane to move the task into.
+            position	The position of the task in the new column (zero-based).
+            exceedingreason	If you can exceed a limit with a reason, supply
+                it with this parameter.
+        :rtype: xml
+        """
+
+        kwargs['boardid'] = boardid
+        kwargs['taskid'] = taskid
+        kwargs['column'] = column
+        params = json.dumps(kwargs)
+        logging.debug('move_task:%s' % params)
+        response = self.post('/move_task/', data=params)
+        return response.json()
+
 
 if __name__ == "__main__":
-    import doctest
-    doctest.testmod()
+#    import doctest
+#    doctest.testmod()
+    k = Kanbanize("5xW5t7vT6ONde4JYT8ekUuvNxh4QX4LXLZzTXjlk")
+    print k.create_new_task(2, {})
