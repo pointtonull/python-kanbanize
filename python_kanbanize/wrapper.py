@@ -96,13 +96,25 @@ class Kanbanize(Session):
 
         :param boardid: Board number to retrieve tasks from
         :type boardid: int
-        :param details: Task details
-        :type details: dict (http://kanbanize.com/ctrl_integration for details)
+        :param kwargs: Task details
+        :type kwargs: recognized params are:
+            title	Title of the task
+            description	Description of the task
+            priority	One of the following: Low, Average, High
+            assignee	Username of the assignee (must be a valid username)
+            color	Any color code (e.g. "34a97b")
+            size	Size of the task
+            tags	Space separated list of tags
+            deadline	Dedline in the format: yyyy-mm-dd (e.g. "2011-12-13")
+            extlink	A link ("http://google.com")
+            type	The name of the type you want to set.
+            template	The name of the template you want to set.
         :rtype: xml
 
         """
-        details['boardid'] = boardid
-        params = json.dumps(details)
+
+        kwargs['boardid'] = boardid
+        params = json.dumps(kwargs)
         logging.debug('create_new_task:%s' % params)
         r = self.post('/create_new_task/', data=params, format = 'raw')
         return r.content
@@ -116,7 +128,18 @@ class Kanbanize(Session):
         :param details: Task details
         :type details: dict (http://kanbanize.com/ctrl_integration for details)
         :rtype: xml
+        """
 
+        kwargs = {}
+        kwargs['boardid'] = boardid
+        kwargs['taskid'] = taskid
+        params = json.dumps(kwargs)
+        logging.debug('delete_task:%d/%d' % (boardid, taskid))
+        response = self.post('/delete_task/', data=params)
+        return response.json()
+
+
+    def edit_task(self, boardid, taskid, **kwargs):
         """
         details['boardid'] = boardid
         params = json.dumps(details)
