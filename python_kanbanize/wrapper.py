@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+#-*- coding: UTF-8 -*-
+
 from requests import Session
 import json
 import logging
@@ -22,13 +25,8 @@ class Kanbanize(Session):
 
         logging.debug('Kanbanize.request:%s - %s - %s' % (url, data, "json"))
 
-        return super(Kanbanize, self).request(
-            method,
-            url=url,
-            data=data,
-            headers=headers,
-            **kwargs
-        )
+        return super(Kanbanize, self).request(method, url=url, data=data,
+            headers=headers, **kwargs)
 
 
     def get_all_tasks(self, boardid):
@@ -101,7 +99,7 @@ class Kanbanize(Session):
             size	Size of the task
             tags	Space separated list of tags
             deadline	Dedline in the format: yyyy-mm-dd (e.g. "2011-12-13")
-            extlink	A link ("http://google.com")
+            extlink	A link (e.g. "http://google.com")
             type	The name of the type you want to set.
             template	The name of the template you want to set.
         :rtype: xml
@@ -198,4 +196,4 @@ if __name__ == "__main__":
 #    import doctest
 #    doctest.testmod()
     k = Kanbanize("5xW5t7vT6ONde4JYT8ekUuvNxh4QX4LXLZzTXjlk")
-    print k.create_new_task(2, {})
+    print k.create_new_task(2, title="Ejecución de prueba")

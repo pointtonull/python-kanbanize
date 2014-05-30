@@ -1,0 +1,3 @@
+boardid,taskid,column,title,description,priority,assignee,color,extlink,type,tags,deadline,size,template
+2,448,Requested,"Ignore me, new title","Description with new line
+Just to know",,ccabrera,aaa,,,,,,
